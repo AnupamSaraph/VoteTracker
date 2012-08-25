@@ -1,0 +1,7 @@
+<html>
+	<head><title>Encryption Decryption</title></head>
+<frameset cols="50%,*">
+  <frame src="/scripts/encryption.php" />
+  <frame src="/scripts/decryption.php" />
+</frameset>
+</html>
