@@ -1,5 +1,5 @@
 <?PHP
-require("./PHPMailer/class.phpmailer.php");
+require("..\lib\PHPMailer\class.phpmailer.php");
 define('GUSER', 'voteopen@gmail.com'); // GMail username
 define('GPWD', 'v0te0pen'); // GMail password
 

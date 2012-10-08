@@ -49,7 +49,6 @@ else
 	//add the products 
 	$voter_id_sum=sum($voter_id);
 	echo "<br/><br/><b>This is Product</b>=".$voter_id_sum."";
-
 	$final_ans=$voter_id_sum % 10;
 	$check_sum=10-$final_ans;
 

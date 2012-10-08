@@ -1,4 +1,27 @@
 <?PHP 
+require 'scripts/database.php';
+if(isset($_POST['login_username']) && isset($_POST['login_password']))
+{
+    require 'scripts/database.php';
+    $username=(string)$_POST['login_username'];
+    $password=(string)$_POST['login_password'];
+        
+    $sql="select * from voter_login where voter_id='$username' and password='$password'";
+    $result=mysql_query($sql);
+    $count=mysql_num_rows($result);
+    if($count == 1)
+    {
+        echo $count;
+        unset($count);
+        session_start();
+        $_SESSION['voter_id']=$username;
+        header("Location: voter_profile.php?opt=a");
+       	unset($_REQUEST['password']);
+	unset($_REQUEST['username']);
+        echo "hello";
+     
+    }    
+}
 
 echo "
 	<html>
@@ -21,27 +44,23 @@ if(isset($_REQUEST["opt"]))
 			 </div>
 			 <div>
 				<h4 style='background-color:black;'><font color='white'>Voter Registration Form</font></h4>
-				<form name='voter' method='post'>
-				  <table>
-					<tr><td>Name</td><td><input type='text' id='fname' name='fname'/></td><td><input type='text' id='mname' name='mname'/></td><td><input type='text' id='lname' name='lname'/></td></tr>
-					<tr><td>Father's Name</td><td><input type='text' id='f_fname' name='f_fname'/></td><td><input type='text' id='f_mname' name='f_mname'/></td><td><input type='text' id='f_lname' name='f_lname'/></td></tr>
-					<tr><td>Mother's Name</td><td><input type='text' id='m_fname' name='m_fname'/></td><td><input type='text' id='m_mname' name='m_mname'/></td><td><input type='text' id='m_lname' name='m_lname'/></td></tr>
-					
-					<tr><td>Gender</td><td><select id='gender' name='gender'><option value='male'>Male</option><option value='female'>Female</option></select></td></tr>
-					<tr><td>Marital status</td><td><select id='rel' name='rel'><option value='single'>Single</option><option value='married'>Married</option></select></td></tr>
-					
-					<tr><td>Reg. Type</td><td><select id='reg' name='reg'><option value='public'>Public</option><option value='private'>Private</option></select></td></tr>
-					<tr><td>Nation</td><td><input type='text' id='nation' name='nation'></td></tr>
-					<tr><td>State</td><td><input type='text' id='state' name='state'></td></tr>
-					<tr><td>City</td><td><input type='text' id='city' name='city'></td></tr>
-					<tr><td>Colony</td><td><input type='text' id='colony' name='colony'></td></tr>
-					<tr><td>Postal Pin</td><td><input type='text' id='pin' name='pin'></td></tr>
-				  </table>
-					<input type='Button' value='Submit' onclick=call(this.form);> <input type='reset' value='Clear' onclick='window.location.href=window.location.href'>
+				<form name='voter'>";
+                                echo"<table>";
+                               $sql ="Select * from issuers where status = 'Y'"; 
+                               $result=mysql_query($sql);
+                               echo"<tr><td>Select Issuer</td><td>";
+                               echo"<select name='issuer_name'><option value='0'>Select Issuer</option>";
+                               while($row=mysql_fetch_array($result))
+                               {
+                                  echo "<option value='".$row['issuer_no']."'>".$row['name']."</option>";
+                               }
+                               echo "</select></td></tr>";
+                               echo "<tr><td>Full Name</td><td><input type='text' name='voter_name' size='65'></td></tr>";
+                               echo "<tr><td>Email</td><td><input type='text' name='voter_email' size='30'></td></tr>";
+			       echo "</table>
+					<input type='button' value='Submit' onClick=voter_registration_request()><input type='reset' value='Clear' onclick='window.location.href=window.location.href'>
 				</form>
-
-				<p><h4 style='background-color:red;'><font color='white'><span id='txtHint2'></font></span></h4></p>
-				<p><h4 style='background-color:green;'><font color='white'><span id='txtHint1'></font></span></h4></p>
+				<p><h4><span id='txtHint1'></span></h4></p>
 				
 			</div>
 		  </div>
@@ -62,7 +81,8 @@ if(isset($_REQUEST["opt"]))
 					<form name='issuer' method='post'>
 					  <table>
 						<tr><td>Name</td><td><input type='text' name='i_name'/></td></tr>
-						<tr><td>Registration No.</td><td><input type='text' name='registration_no'/></td></tr>
+						<tr><td>Registered Domain Name:</td><td><input type='text' name='registration_no'/></td></tr>
+						<tr><td>Email:</td><td><input type='text' name='email'/></td></tr>
 						<tr><td>Website Address(URL)</td><td><input type='text' name='url'/></td></tr>
 					  </table>
 						<input type='Button' value='Submit' onclick=addissuer(this.form);> <input type='reset' value='Clear' onclick='window.location.href=window.location.href'>
@@ -82,7 +102,7 @@ else
 		<div class='centered'>
 		  
 		  <div style='border:2px solid white;'>	
-				<h1><a class='title' href='e_admin.php'>OpenVote</a></h1>
+				<h1 style='color:white;'>OpenVote</h1>
 		  </div>
 
 		  <div class='div_left'>
@@ -100,21 +120,21 @@ else
 		  
 		  <div class='div_right'>
 				<br><br>
-				<form name='profile' method='post'>
+				<form name='profile' method='post' action=$_SERVER[PHP_SELF]>
 					<caption><font color='white'>Login to Manage Your Profile</font></caption>
 					<hr>
 					<table class='table_center'>
-						<tr><td><font color='white'>User Name</font></td><td><input type='text' name='user_name'/></td></tr>
-						<tr><td><font color='white'>Password</font></td><td><input type='password' name='password'/></td></tr>
-						<tr><td></td><td><input type='submit' value='Login'/><input type='reset' value='cancel'/></td></tr>
+						<tr><td><font color='white'>User Name</font></td><td><input type='text' name='login_username'/></td></tr>
+						<tr><td><font color='white'>Password</font></td><td><input type='password' name='login_password'/></td></tr>
+						<tr><td></td><td><input type='submit' id='submit' value='Login'/><input type='reset' value='cancel'/></td></tr>
 					</table>
 				</form>
 		  </div>
 		 <div style='border:1px solid white;'>	
-				<font color='white' size='2'><a class='title' href=?opt=req>Request For Registration</a></font>
+				<font color='white' size='2'><a style='text-decoration:none;color:white;' href=?opt=req>Request For Registration</a></font>
 		 </div>
 		 <div style='border:1px solid white;'>	
-				<font color='white' size='2'><a class='title' href=?opt=cnt>Want to Conduct Election Click Here</a></font>
+				<font color='white' size='2'><a style='text-decoration:none;color:white;' href=?opt=cnt>Want to Conduct Election Click Here</a></font>
 		 </div>
 
 		</div>

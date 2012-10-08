@@ -19,12 +19,6 @@ colony varchar(20) not null,
 postal_pin varchar(20) not null,
 status char(1) not null);
 
-drop table voter;
-
-select * from voter;
-insert into voter(v_fname,v_mname,v_lname,f_fname,f_mname,f_lname,m_fname,m_mname,m_lname,gender,marital_status,reg,nation,state,city,colony,postal_pin,status)
-values('d','d','d','d','d','d','d','d','d','d','d','d','d','d','d','d','d','d');
-
 create table issuers 
 (srno int not null AUTO_INCREMENT primary key,
  name varchar(20) not null,
@@ -32,38 +26,63 @@ create table issuers
  url varchar(40) not null,
  status char(1) not null);
  
- alter table issuers add(issuer_no varchar(20) not null);
- 
- update issuers
- set status = 'N' 
- where srno=15;
- 
- 
- Select * from issuers;
- 
- insert into issuers(name,reg_no,url,status) values('Dell','N/A','www.dell.com','Y');
- 
+alter table issuers add(issuer_no varchar(20) not null);
  
  create table administrator
  (username varchar(20) not null,
   password varchar(20) not null);
-  
-  insert into administrator values('Priyanka','Priyanka');
-  
-  select * from administrator;  
-  
-  select count(*) from administrator where username='Digvijay' and password='Digvijay';
-  
-  create table e_admin
-  (username varchar(20) not null primary key,
+    
+ create table e_admin
+ (username varchar(20) not null primary key,
    password varchar(20) not null,
    issuer_id varchar(20) not null);
    
-  insert into e_admin values('Digvijay','Digvijay','90');
-   
-   select * from e_admin;
-   
-   update e_admin set issuer_id = '90' where username = 'username';
-   
-   
  
+ create table constituency 
+ (srno int not null AUTO_INCREMENT primary key,
+  name varchar(50) not null,
+  issuer_id varchar(50) not null);
+
+create table voter_issuer
+(sr_no int not null auto_increment primary key,
+voter_srno int,
+foreign key(voter_srno) references voter(srno),
+const_id int,
+foreign key(const_id) references constituency(srno),
+voter_id varchar(50),
+issuer_id varchar(50));
+
+create table elections
+(sr_no int not null auto_increment primary key,
+ election_name varchar(50),
+ election_purpose varchar(200),
+ start_date varchar(30),
+ end_date varchar(30));
+ 
+ create table elections_voterissuer
+ (sr_no int not null auto_increment primary key,
+  election_id int,
+  foreign key(election_id) references elections(sr_no),
+  const_id int,
+  foreign key(const_id) references voter_issuer(const_id),
+  issuer_id varchar(50));
+  
+create table voter_login
+(sr_no int not null auto_increment primary key,
+ voter_id varchar(50),
+ username varchar(50),
+ password varchar(50));
+ 
+create table candidates
+(srno int not null auto_increment primary key,
+ election_id int,
+ foreign key(election_id) references elections(sr_no),
+ const_id int,
+ foreign key(const_id) references constituency(srno),
+ voter_id varchar(50));
+ 
+create table registered_vote
+(voter_id varchar(50),
+ candidate_voter_id varchar(50),
+ election_id int,
+ foreign key(election_id) references elections(srno))

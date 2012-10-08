@@ -1,0 +1,8 @@
+..sample-3 13/09/12 03:38:36 Logged In 
+..sample-3 13/09/12 03:38:57 Logged Out
+..sample-4 22/09/12 07:01:59 Logged In 
+..sample-4 22/09/12 07:02:20 Logged Out
+..sample-4 22/09/12 12:44:32 Logged In 
+..sample-4 22/09/12 12:49:24 Logged Out
+..sample-4 22/09/12 06:46:34 Logged In 
+..sample-4 22/09/12 06:54:58 Logged Out

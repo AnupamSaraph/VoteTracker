@@ -39,7 +39,7 @@ div.content{
     margin-top:1px;
 	height:100px;
 	float:right;
-	width:1140px;
+	width:1160px;
 	padding:1px;
 }
 
@@ -67,11 +67,7 @@ div.registration {
 	height: 210px;
 }
 
-.title {
-	font-family:Arial;
-	color: white;
-	text-decoration:none;
-}
+
 
 .table_center{
 	margin-left: auto;
@@ -126,3 +122,4 @@ hr.w {
 	width: 10em; 
 	background-color: #9ACD32;
 }
+
